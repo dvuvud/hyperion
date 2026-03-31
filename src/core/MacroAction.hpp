@@ -1,38 +1,39 @@
+#pragma once
+
 #include <variant>
 #include <string>
 #include <cstdint>
 
 struct KeyAction {
-    uint32_t    key;            // Qt::Key value
-    bool        press;          // true = press, false = release
-    uint32_t    modifiers;      // Qt::KeyboardModifiers bitmask
-    uint32_t    holdMs;         // how long to hold (0 = instant)
+    uint32_t key;
+    bool press;
+    uint32_t modifiers;
+    uint32_t holdMs;
 };
 
 struct MouseAction {
     enum class Button { Left, Right, Middle };
     enum class Kind   { Click, Press, Release, Move, Scroll };
-    Button      button;
-    Kind        kind;
-    int         x, y;           // screen coords
-    uint32_t    holdMs;
+
+    Button button;
+    Kind   kind;
+    int    x, y;
+    uint32_t holdMs;
 };
 
 struct DelayAction {
-    uint32_t    fixedMs;        
-    uint32_t    jitterMs;       // ± random amount for human-like timing
+    uint32_t fixedMs;
+    uint32_t jitterMs;
 };
 
 struct LoopBegin {
-    std::string variableName;   // e.g. "count"
-    uint32_t    defaultCount;   // used if variable not set at runtime
+    std::string variableName;
+    uint32_t defaultCount;
 };
 
-struct LoopEnd {
-    // paired with a LoopBegin by index at runtime
-};
+struct LoopEnd {};
 
-using MacroAction = std::variant
+using MacroAction = std::variant<
 KeyAction,
     MouseAction,
     DelayAction,
