@@ -31,12 +31,9 @@ struct LoopBegin {
     uint32_t defaultCount;
 };
 
-struct LoopEnd {};
-
 using MacroAction = std::variant<
 KeyAction,
     MouseAction,
     DelayAction,
-    LoopBegin,
-    LoopEnd
+    LoopBegin
     >;
