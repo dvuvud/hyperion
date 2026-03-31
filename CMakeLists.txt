@@ -22,6 +22,14 @@ qt_add_qml_module(hyperion-app
     QML_FILES src/Main.qml
 )
 
+add_library(hyperion-core
+)
+
+target_include_directories(hyperion-core PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
 target_link_libraries(hyperion-app PRIVATE
+    hyperion-core
     Qt6::Core Qt6::Gui Qt6::Qml Qt6::Quick
 )
