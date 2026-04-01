@@ -1,28 +1,32 @@
 import QtQuick
 import QtQuick.Controls
-import Hyperion
 
 ApplicationWindow {
-    width: 800; height: 600
+    id: root
+    width: 800
+    height: 560
     visible: true
+    title: "Hyperion"
+    color: "#0a1628"
 
-    MacroListModel {
-        id: macroModel
-    }
-
-    Component.onCompleted: {
-        macroModel.appendAction("key")
-        macroModel.appendAction("delay")
-        macroModel.appendAction("loopBegin")
-        console.log("Row count:", macroModel.rowCount())
-    }
-
-    ListView {
+    StackView {
+        id: stack
         anchors.fill: parent
-        model: macroModel
-        delegate: Text {
-            text: actionLabel
-            color: "white"
+        initialItem: HomeScreen {}
+
+        pushEnter: Transition {
+            PropertyAnimation { property: "opacity"; from: 0; to: 1; duration: 120 }
+            PropertyAnimation { property: "x"; from: 30; to: 0; duration: 120; easing.type: Easing.OutCubic }
+        }
+        pushExit: Transition {
+            PropertyAnimation { property: "opacity"; from: 1; to: 0; duration: 120 }
+        }
+        popEnter: Transition {
+            PropertyAnimation { property: "opacity"; from: 0; to: 1; duration: 120 }
+        }
+        popExit: Transition {
+            PropertyAnimation { property: "opacity"; from: 1; to: 0; duration: 120 }
+            PropertyAnimation { property: "x"; from: 0; to: 30; duration: 120; easing.type: Easing.InCubic }
         }
     }
 }
