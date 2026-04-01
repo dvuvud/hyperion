@@ -6,43 +6,22 @@ Rectangle {
     id: root
     color: "#0a1628"
 
-    // titlebar
-    Rectangle {
+    TitleBar {
         id: titleBar
-        anchors.top: parent.top
-        anchors.left: parent.left
+        anchors.top:   parent.top
+        anchors.left:  parent.left
         anchors.right: parent.right
-        height: 40
-        color: "#07101e"
-
-        Rectangle {
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: 1
-            color: "#1a2d4a"
-        }
-
-        Text {
-            anchors.centerIn: parent
-            text: "HYPERION"
-            color: "#7aa4d4"
-            font.pixelSize: 13
-            font.weight: Font.DemiBold
-            font.letterSpacing: 1.4
-        }
+        barTitle: "HYPERION"
     }
 
-    // scrollable content
     ScrollView {
-        anchors.top: titleBar.bottom
+        anchors.top:    titleBar.bottom
         anchors.bottom: statusBar.top
-        anchors.left: parent.left
-        anchors.right: parent.right
+        anchors.left:   parent.left
+        anchors.right:  parent.right
         contentWidth: availableWidth
         clip: true
 
-        // hyperion emblem in top middle
         Item {
             width: parent.width
             implicitHeight: mainColumn.implicitHeight + 80
@@ -53,7 +32,6 @@ Rectangle {
                 width: Math.min(520, parent.width - 48)
                 spacing: 36
 
-                // logo
                 ColumnLayout {
                     Layout.alignment: Qt.AlignHCenter
                     spacing: 10
@@ -108,7 +86,6 @@ Rectangle {
                     }
                 }
 
-                // cards - create and library
                 RowLayout {
                     Layout.fillWidth: true
                     spacing: 16
@@ -136,7 +113,6 @@ Rectangle {
                     }
                 }
 
-                // recent
                 ColumnLayout {
                     Layout.fillWidth: true
                     spacing: 2
@@ -151,7 +127,6 @@ Rectangle {
                     }
 
                     Repeater {
-                        // placeholder examples of recents
                         model: [
                             { name: "Login flow",      meta: "2 actions · edited today", active: true  },
                             { name: "Form filler",     meta: "8 actions · yesterday",    active: false },
@@ -170,18 +145,17 @@ Rectangle {
         }
     }
 
-    // simple status bar
     Rectangle {
         id: statusBar
         anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
+        anchors.left:   parent.left
+        anchors.right:  parent.right
         height: 26
         color: "#07101e"
 
         Rectangle {
-            anchors.top: parent.top
-            anchors.left: parent.left
+            anchors.top:   parent.top
+            anchors.left:  parent.left
             anchors.right: parent.right
             height: 1
             color: "#1a2d4a"
