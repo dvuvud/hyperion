@@ -41,7 +41,6 @@ FocusScope {
         // empty state
         Column {
             anchors.centerIn: parent
-            anchors.horizontalCenterOffset: inspectorPane.width > 0 ? -inspectorPane.width / 2 : 0
             spacing: 10
             visible: macroModel.count === 0
             opacity: 0.35
@@ -63,7 +62,7 @@ FocusScope {
             anchors.top:    parent.top
             anchors.bottom: parent.bottom
             anchors.left:   parent.left
-            anchors.right:  inspectorPane.left
+            anchors.right:  parent.right
             topMargin:   12
             leftMargin:  16
             rightMargin: 16
@@ -153,14 +152,6 @@ FocusScope {
                     }
                 }
             }
-        }
-
-        // divider
-        Rectangle {
-            anchors.top: parent.top; anchors.bottom: parent.bottom
-            anchors.right: inspectorPane.left
-            width: inspectorPane.width > 0 ? 1 : 0
-            color: "#1a2d4a"
         }
     }
 

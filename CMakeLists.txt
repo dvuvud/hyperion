@@ -49,7 +49,6 @@ qt_add_qml_module(hyperion-app
         src/ui/HomeScreen.qml
         src/ui/CreateMacroScreen.qml
         src/ui/ActionBlock.qml
-        src/ui/InspectorPanel.qml
         src/ui/MacroCard.qml
         src/ui/RecentRow.qml
         src/ui/ToolbarButton.qml
