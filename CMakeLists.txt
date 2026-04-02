@@ -36,7 +36,7 @@ qt_add_executable(hyperion-app
 
 target_include_directories(hyperion-app PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/ui
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/core
 )
 
 # --- qml module
@@ -57,8 +57,8 @@ qt_add_qml_module(hyperion-app
         src/ui/TitleBarButton.qml
 
     SOURCES
-        src/ui/MacroListModel.hpp
-        src/ui/MacroListModel.cpp
+        src/core/MacroListModel.hpp
+        src/core/MacroListModel.cpp
 
 )
 
