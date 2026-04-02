@@ -24,7 +24,29 @@ QVariant MacroListModel::data(const QModelIndex& index, int role) const {
     switch (role) {
         case TypeRole:  return typeFor(action);
         case LabelRole: return labelFor(action);
-        case DataRole:  return QVariant();
+        case DataRole: {
+            return std::visit([](auto&& a) -> QVariant {
+                using T = std::decay_t<decltype(a)>;
+                QVariantMap m;
+                if constexpr (std::is_same_v<T, KeyAction>) {
+                    m["key"]       = a.key;
+                    m["press"]     = a.press;
+                    m["modifiers"] = a.modifiers;
+                    m["holdMs"]    = a.holdMs;
+                } else if constexpr (std::is_same_v<T, MouseAction>) {
+                    m["x"]      = a.x;
+                    m["y"]      = a.y;
+                    m["holdMs"] = a.holdMs;
+                } else if constexpr (std::is_same_v<T, DelayAction>) {
+                    m["fixedMs"]  = a.fixedMs;
+                    m["jitterMs"] = a.jitterMs;
+                } else if constexpr (std::is_same_v<T, LoopBegin>) {
+                    m["variableName"] = QString::fromStdString(a.variableName);
+                    m["defaultCount"] = a.defaultCount;
+                }
+                    return m;
+                }, action);
+        }
         default:        return {};
     }
 }
@@ -36,7 +58,6 @@ QString MacroListModel::typeFor(const MacroAction& action) {
             if constexpr (std::is_same_v<T, MouseAction>)  return "mouse";
             if constexpr (std::is_same_v<T, DelayAction>)  return "delay";
             if constexpr (std::is_same_v<T, LoopBegin>)    return "loopBegin";
-            if constexpr (std::is_same_v<T, LoopEnd>)      return "loopEnd";
             return "unknown";
             }, action);
 }
@@ -52,8 +73,6 @@ QString MacroListModel::labelFor(const MacroAction& action) {
             return QString("Wait %1ms").arg(a.fixedMs);
             if constexpr (std::is_same_v<T, LoopBegin>)
             return QString("Loop × %1").arg(a.defaultCount);
-            if constexpr (std::is_same_v<T, LoopEnd>)
-            return "End loop";
             return "Unknown";
             }, action);
 }
@@ -65,7 +84,6 @@ void MacroListModel::appendAction(const QString& type) {
     else if (type == "mouse")     m_actions.push_back(MouseAction{});
     else if (type == "delay")     m_actions.push_back(DelayAction{ 500, 0 });
     else if (type == "loopBegin") m_actions.push_back(LoopBegin{ "count", 3 });
-    else if (type == "loopEnd")   m_actions.push_back(LoopEnd{});
 
     endInsertRows();
 }
@@ -84,4 +102,34 @@ void MacroListModel::moveAction(int from, int to) {
     m_actions.erase(m_actions.begin() + from);
     m_actions.insert(m_actions.begin() + to, action);
     endMoveRows();
+}
+
+void MacroListModel::updateAction(int index, const QVariantMap& data) {
+    if (index < 0 || index >= rowCount()) return;
+
+    auto& action = m_actions[index];
+    const QString type = typeFor(action);
+
+    if (type == "key") {
+        auto& a = std::get<KeyAction>(action);
+        if (data.contains("key"))       a.key       = data["key"].toUInt();
+        if (data.contains("press"))     a.press     = data["press"].toBool();
+        if (data.contains("modifiers")) a.modifiers = data["modifiers"].toUInt();
+        if (data.contains("holdMs"))    a.holdMs    = data["holdMs"].toUInt();
+    } else if (type == "mouse") {
+        auto& a = std::get<MouseAction>(action);
+        if (data.contains("x"))      a.x      = data["x"].toInt();
+        if (data.contains("y"))      a.y      = data["y"].toInt();
+        if (data.contains("holdMs")) a.holdMs = data["holdMs"].toUInt();
+    } else if (type == "delay") {
+        auto& a = std::get<DelayAction>(action);
+        if (data.contains("fixedMs"))  a.fixedMs  = data["fixedMs"].toUInt();
+        if (data.contains("jitterMs")) a.jitterMs = data["jitterMs"].toUInt();
+    } else if (type == "loopBegin") {
+        auto& a = std::get<LoopBegin>(action);
+        if (data.contains("variableName"))  a.variableName  = data["variableName"].toString().toStdString();
+        if (data.contains("defaultCount"))  a.defaultCount  = data["defaultCount"].toUInt();
+    }
+
+    emit dataChanged(createIndex(index, 0), createIndex(index, 0));
 }

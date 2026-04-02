@@ -24,6 +24,7 @@ class MacroListModel : public QAbstractListModel {
         Q_INVOKABLE void appendAction(const QString& type);
         Q_INVOKABLE void removeAction(int index);
         Q_INVOKABLE void moveAction(int from, int to);
+        Q_INVOKABLE void updateAction(int index, const QVariantMap& data);
 
     private:
         std::vector<MacroAction> m_actions;
