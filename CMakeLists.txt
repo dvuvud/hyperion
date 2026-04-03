@@ -18,7 +18,6 @@ qt_policy(SET QTP0004 NEW)
 add_library(hyperion-core STATIC
     src/core/Macro.hpp
     src/core/MacroAction.hpp
-    src/core/MacroEngine.hpp
 )
 
 target_include_directories(hyperion-core PUBLIC
@@ -59,7 +58,10 @@ qt_add_qml_module(hyperion-app
     SOURCES
         src/core/MacroListModel.hpp
         src/core/MacroListModel.cpp
-
+        src/core/MacroEngineHost.hpp
+        src/core/MacroEngineHost.cpp
+        src/core/MacroEngine.hpp
+        src/core/MacroEngine.cpp
 )
 
 # --- linking
