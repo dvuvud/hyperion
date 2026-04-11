@@ -27,8 +27,8 @@ struct DelayAction {
 };
 
 struct LoopBegin {
-    std::string variableName;
-    uint32_t defaultCount;
+    uint32_t count;
+    bool     infinite;
 };
 
 using MacroAction = std::variant<
