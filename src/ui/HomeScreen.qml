@@ -6,13 +6,36 @@ Rectangle {
     id: root
     color: "#0a1628"
 
-    TitleBar {
+    // titlebar
+    Rectangle {
         id: titleBar
         anchors.top:   parent.top
         anchors.left:  parent.left
         anchors.right: parent.right
-        barTitle: "HYPERION"
+        height: 40
+        color: "#07101e"
+        
+        // title text
+        Text {
+            id: titleText
+            anchors.centerIn: parent
+            text: "HYPERION"
+            color: "#7aa4d4"
+            font.pixelSize: 13
+            font.weight: Font.DemiBold
+            font.letterSpacing: 1.4
+        }
+
+        // bottom border
+        Rectangle {
+            anchors.bottom: parent.bottom
+            anchors.left:   parent.left
+            anchors.right:  parent.right
+            height: 1
+            color: "#1a2d4a"
+        }
     }
+
 
     ScrollView {
         anchors.top:    titleBar.bottom
@@ -98,7 +121,7 @@ Rectangle {
                         cta: "Get started"
                         isPrimary: true
                         iconType: "create"
-                        onClicked: stack.push(Qt.resolvedUrl("CreateMacroScreen.qml"))
+                        onClicked: console.log("create - coming soon")
                     }
 
                     MacroCard {
@@ -112,39 +135,11 @@ Rectangle {
                         onClicked: console.log("library — coming soon")
                     }
                 }
-
-                ColumnLayout {
-                    Layout.fillWidth: true
-                    spacing: 2
-
-                    Text {
-                        text: "RECENT"
-                        color: "#2d5a9e"
-                        font.pixelSize: 11
-                        font.weight: Font.DemiBold
-                        font.letterSpacing: 1.8
-                        bottomPadding: 8
-                    }
-
-                    Repeater {
-                        model: [
-                            { name: "Login flow",      meta: "2 actions · edited today", active: true  },
-                            { name: "Form filler",     meta: "8 actions · yesterday",    active: false },
-                            { name: "Screenshot loop", meta: "3 actions · 3 days ago",   active: false },
-                        ]
-                        delegate: RecentRow {
-                            required property var modelData
-                            Layout.fillWidth: true
-                            macroName: modelData.name
-                            metaText:  modelData.meta
-                            isActive:  modelData.active
-                        }
-                    }
-                }
             }
         }
     }
 
+    // status bar
     Rectangle {
         id: statusBar
         anchors.bottom: parent.bottom

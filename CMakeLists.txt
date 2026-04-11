@@ -45,14 +45,7 @@ qt_add_qml_module(hyperion-app
     QML_FILES
         src/ui/Main.qml
         src/ui/HomeScreen.qml
-        src/ui/CreateMacroScreen.qml
-        src/ui/ActionBlock.qml
         src/ui/MacroCard.qml
-        src/ui/RecentRow.qml
-        src/ui/ToolbarButton.qml
-        src/ui/TitleBar.qml
-        src/ui/TitleTextInput.qml
-        src/ui/TitleBarButton.qml
 
     SOURCES
         src/core/MacroListModel.hpp
