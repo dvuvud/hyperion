@@ -6,11 +6,6 @@ Rectangle {
     id: root
     color: "#0a1628"
 
-    // titlebar
-    TitleBar {
-        id: titleBar
-    }
-
     ColumnLayout {
         id: mainColumn
         anchors.centerIn: parent
@@ -52,7 +47,7 @@ Rectangle {
                 cta: "Get started"
                 isPrimary: true
                 iconType: "create"
-                onClicked: console.log("create - coming soon")
+                onClicked: stack.push(Qt.resolvedUrl("CreateMacroScreen.qml"))
             }
 
             MacroCard {
@@ -68,6 +63,12 @@ Rectangle {
         }
     }
 
+    // titlebar
+    TitleBar {
+        id: titleBar
+    }
     // status bar
-    StatusBar {}
+    StatusBar {
+        id: statusBar
+    }
 }
