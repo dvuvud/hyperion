@@ -19,6 +19,21 @@ FocusScope {
 
     MacroListModel { id: macroModel }
 
+    // bind the TitleBar's editable field bidirectionally
+    Binding {
+        target:   titleBar
+        property: "macroName"
+        value:    macroModel.macroName
+    }
+
+    // write changes back to the model
+    Connections {
+        target: titleBar
+        function onMacroNameChanged() {
+            macroModel.macroName = titleBar.macroName
+        }
+    }
+
     TitleBar {
         id: titleBar
         anchors.top:   parent.top
@@ -27,7 +42,10 @@ FocusScope {
         z: 10
         showBack: true; showRecord: true; showSave: true
         onBackClicked: stack.pop()
-        onSaveClicked: console.log("save", macroName)
+        onSaveClicked: {
+            MacroEngineHost.executeFromModel(macroModel)
+            stack.pop()
+        }
     }
 
     // body

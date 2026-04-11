@@ -1,5 +1,6 @@
 #pragma once
 
+#include "MacroListModel.hpp"
 #include "MacroEngine.hpp"
 #include <QObject>
 #include <QThread>
@@ -21,6 +22,7 @@ public:
     bool running() const { return m_running; }
 
     Q_INVOKABLE void execute(const Macro& macro);
+    Q_INVOKABLE void executeFromModel(MacroListModel* model);
     Q_INVOKABLE void abort();
 
 signals:

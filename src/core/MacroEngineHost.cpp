@@ -41,6 +41,11 @@ void MacroEngineHost::execute(const Macro& macro) {
     emit _execute(macro);
 }
 
+void MacroEngineHost::executeFromModel(MacroListModel* model) {
+    if (!model) return;
+    execute(model->macro());
+}
+
 void MacroEngineHost::abort() {
     emit _abort();
 }
