@@ -19,15 +19,8 @@ Rectangle {
 
         // back button
         ToolButton {
-            text: "‹"
+            icon.source: "../icons/back.svg"
             font.pixelSize: 18
-            contentItem: Text {
-                text: parent.text
-                color: "#7aa4d4"
-                font: parent.font
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-            }
             background: Rectangle {
                 color: parent.hovered ? "#1a2d4a" : "transparent"
                 radius: 4
@@ -37,7 +30,7 @@ Rectangle {
 
         // save button
         ToolButton {
-            text: "💾"
+            icon.source: "../icons/save.svg"
             background: Rectangle {
                 color: parent.hovered ? "#1a2d4a" : "transparent"
                 radius: 4
@@ -47,14 +40,7 @@ Rectangle {
 
         // run button
         ToolButton {
-            text: "▶"
-            contentItem: Text {
-                text: parent.text
-                color: "#7aa4d4"
-                font.pixelSize: 12
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-            }
+            icon.source: "../icons/run.svg"
             background: Rectangle {
                 color: parent.hovered ? "#1a2d4a" : "transparent"
                 radius: 4
