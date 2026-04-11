@@ -42,8 +42,8 @@ QVariant MacroListModel::data(const QModelIndex& index, int role) const {
                     m["fixedMs"]  = a.fixedMs;
                     m["jitterMs"] = a.jitterMs;
                 } else if constexpr (std::is_same_v<T, LoopBegin>) {
-                    m["variableName"] = QString::fromStdString(a.variableName);
-                    m["defaultCount"] = a.defaultCount;
+                    m["count"]    = a.count;
+                    m["infinite"] = a.infinite;
                 }
                 return m;
             }, action);
@@ -58,7 +58,7 @@ void MacroListModel::appendAction(const QString& type) {
     if      (type == "key")       m_macro.actions.push_back(KeyAction{});
     else if (type == "mouse")     m_macro.actions.push_back(MouseAction{});
     else if (type == "delay")     m_macro.actions.push_back(DelayAction{ 500, 0 });
-    else if (type == "loopBegin") m_macro.actions.push_back(LoopBegin{ "count", 3 });
+    else if (type == "loopBegin") m_macro.actions.push_back(LoopBegin{ 3, false });
 
     endInsertRows();
 }
@@ -102,8 +102,8 @@ void MacroListModel::updateAction(int index, const QVariantMap& data) {
         if (data.contains("jitterMs")) a.jitterMs = data["jitterMs"].toUInt();
     } else if (type == "loopBegin") {
         auto& a = std::get<LoopBegin>(action);
-        if (data.contains("variableName")) a.variableName = data["variableName"].toString().toStdString();
-        if (data.contains("defaultCount")) a.defaultCount = data["defaultCount"].toUInt();
+        if (data.contains("count"))    a.count    = data["count"].toUInt();
+        if (data.contains("infinite")) a.infinite = data["infinite"].toBool();
     }
 
     emit dataChanged(createIndex(index, 0), createIndex(index, 0));
@@ -130,7 +130,7 @@ QString MacroListModel::labelFor(const MacroAction& action) {
         if constexpr (std::is_same_v<T, DelayAction>)
             return QString("Wait %1ms").arg(a.fixedMs);
         if constexpr (std::is_same_v<T, LoopBegin>)
-            return QString("Loop × %1").arg(a.defaultCount);
+            return a.infinite ? QString("Loop ∞") : QString("Loop × %1").arg(a.count);
         return "Unknown";
     }, action);
 }
