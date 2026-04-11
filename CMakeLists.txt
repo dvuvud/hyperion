@@ -63,6 +63,13 @@ qt_add_qml_module(hyperion-app
         src/core/MacroEngineHost.cpp
         src/core/MacroEngine.hpp
         src/core/MacroEngine.cpp
+
+    RESOURCES
+        src/ui/icons/back.svg
+        src/ui/icons/save.svg
+        src/ui/icons/run.svg
+        src/ui/icons/macro-create.svg
+        src/ui/icons/macro-browse.svg
 )
 
 # --- linking
