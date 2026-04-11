@@ -44,11 +44,15 @@ qt_add_qml_module(hyperion-app
 
     QML_FILES
         src/ui/Main.qml
-        src/ui/HomeScreen.qml
-        src/ui/MacroCard.qml
-        src/ui/Logo.qml
-        src/ui/TitleBar.qml
-        src/ui/StatusBar.qml
+
+        # screens
+        src/ui/screens/HomeScreen.qml
+
+        # components
+        src/ui/components/MacroCard.qml
+        src/ui/components/Logo.qml
+        src/ui/components/TitleBar.qml
+        src/ui/components/StatusBar.qml
 
     SOURCES
         src/core/MacroListModel.hpp
