@@ -33,5 +33,6 @@ Rectangle {
             Text { text: "Ready"; color: "#2d5a9e"; font.pixelSize: 11 }
         }
         Text { text: "Qt 6"; color: "#2d5a9e"; font.pixelSize: 11 }
+        Text { text: "Hyperion"; color: "#2d5a9e"; font.pixelSize: 11 }
     }
 }
