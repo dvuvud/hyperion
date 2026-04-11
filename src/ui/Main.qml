@@ -29,4 +29,5 @@ ApplicationWindow {
             PropertyAnimation { property: "x"; from: 0; to: 30; duration: 120; easing.type: Easing.InCubic }
         }
     }
+    StatusBar {}
 }

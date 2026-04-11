@@ -67,8 +67,4 @@ Rectangle {
     TitleBar {
         id: titleBar
     }
-    // status bar
-    StatusBar {
-        id: statusBar
-    }
 }
