@@ -10,6 +10,10 @@ Rectangle {
     height: 40
     color: "#07101e"
 
+    signal addAction(string type)
+    signal saveRequested()
+    signal runRequested()
+
     RowLayout {
         anchors.left:    parent.left
         anchors.top:     parent.top
@@ -20,31 +24,85 @@ Rectangle {
         // back button
         ToolButton {
             icon.source: "../icons/back.svg"
+
             background: Rectangle {
                 color: parent.hovered ? "#1a2d4a" : "transparent"
                 radius: 4
             }
+
             onClicked: stack.pop()
         }
 
         // save button
         ToolButton {
             icon.source: "../icons/save.svg"
+
             background: Rectangle {
                 color: parent.hovered ? "#1a2d4a" : "transparent"
                 radius: 4
             }
-            // TODO: setup onClicked:
+
+            onClicked: macroBar.saveRequested()
+        }
+
+        // key action button
+        ToolButton {
+            icon.source: "../icons/keyboard.svg"
+
+            background: Rectangle {
+                color: parent.hovered ? "#1a2d4a" : "transparent"
+                radius: 4
+            }
+
+            onClicked: macroBar.addAction("key")
+        }
+
+        // mouse action button
+        ToolButton {
+            icon.source: "../icons/mouse.svg"
+
+            background: Rectangle {
+                color: parent.hovered ? "#1a2d4a" : "transparent"
+                radius: 4
+            }
+
+            onClicked: macroBar.addAction("mouse")
+        }
+
+        // delay action button
+        ToolButton {
+            icon.source: "../icons/delay.svg"
+
+            background: Rectangle {
+                color: parent.hovered ? "#1a2d4a" : "transparent"
+                radius: 4
+            }
+
+            onClicked: macroBar.addAction("delay")
+        }
+
+        // loop action button
+        ToolButton {
+            icon.source: "../icons/loop.svg"
+
+            background: Rectangle {
+                color: parent.hovered ? "#1a2d4a" : "transparent"
+                radius: 4
+            }
+
+            onClicked: macroBar.addAction("loopBegin")
         }
 
         // run button
         ToolButton {
             icon.source: "../icons/run.svg"
+
             background: Rectangle {
                 color: parent.hovered ? "#1a2d4a" : "transparent"
                 radius: 4
             }
-            // TODO: setup onClicked:
+
+            onClicked: macroBar.runRequested()
         }
     }
 
