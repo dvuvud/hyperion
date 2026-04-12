@@ -20,7 +20,6 @@ Rectangle {
         // back button
         ToolButton {
             icon.source: "../icons/back.svg"
-            font.pixelSize: 18
             background: Rectangle {
                 color: parent.hovered ? "#1a2d4a" : "transparent"
                 radius: 4
