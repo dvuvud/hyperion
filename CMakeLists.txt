@@ -48,6 +48,7 @@ qt_add_qml_module(hyperion-app
         # screens
         src/ui/screens/HomeScreen.qml
         src/ui/screens/CreateMacroScreen.qml
+        src/ui/screens/LibraryScreen.qml
 
         # components
         src/ui/components/MacroCard.qml

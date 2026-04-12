@@ -58,7 +58,7 @@ Rectangle {
                 cta: "Open library"
                 isPrimary: false
                 iconType: "library"
-                onClicked: console.log("library — coming soon")
+                onClicked: stack.push(Qt.resolvedUrl("LibraryScreen.qml"))
             }
         }
     }
