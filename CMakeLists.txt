@@ -69,6 +69,8 @@ qt_add_qml_module(hyperion-app
         src/core/MacroEngineHost.cpp
         src/core/MacroEngine.hpp
         src/core/MacroEngine.cpp
+        src/core/MacroSerializer.hpp
+        src/core/MacroSerializer.cpp
 
     RESOURCES
         src/ui/icons/back.svg
