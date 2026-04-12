@@ -37,6 +37,10 @@ target_include_directories(hyperion-app PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core
 )
 
+target_compile_definitions(hyperion-app PRIVATE
+    PROJECT_ROOT="${CMAKE_SOURCE_DIR}"
+)
+
 # --- qml module
 qt_add_qml_module(hyperion-app
     URI Hyperion
