@@ -11,7 +11,11 @@ ApplicationWindow {
 
     StackView {
         id: stack
-        anchors.fill: parent
+        anchors.top: parent.top
+        anchors.bottom: statusBar.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+
         initialItem: HomeScreen {}
 
         pushEnter: Transition {
@@ -29,5 +33,7 @@ ApplicationWindow {
             PropertyAnimation { property: "x"; from: 0; to: 30; duration: 120; easing.type: Easing.InCubic }
         }
     }
-    StatusBar {}
+    StatusBar {
+        id: statusBar
+    }
 }
