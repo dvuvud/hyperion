@@ -56,6 +56,7 @@ qt_add_qml_module(hyperion-app
         src/ui/components/TitleBar.qml
         src/ui/components/StatusBar.qml
         src/ui/components/MacroToolbar.qml
+        src/ui/components/MacroItem.qml
 
     SOURCES
         src/core/MacroListModel.hpp
