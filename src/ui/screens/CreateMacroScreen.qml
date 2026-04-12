@@ -34,11 +34,16 @@ Rectangle {
         }
 
         onSaveRequested: {
-            console.log("save macro")
+            var ok = macroModel.saveToFile("data/" + macroModel.macroName + ".json")
+            console.log("Saved to data/" + macroModel.macroName + ".json: ", ok)
         }
 
         onRunRequested: {
             console.log("run macro")
+        }
+
+        onTextEdited: (text) => {
+            macroModel.macroName = text
         }
     }
 }
