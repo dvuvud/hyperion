@@ -41,6 +41,9 @@ public:
     Q_INVOKABLE void moveAction(int from, int to);
     Q_INVOKABLE void updateAction(int index, const QVariantMap& data);
 
+    Q_INVOKABLE bool saveToFile(const QString& path);
+    Q_INVOKABLE bool loadFromFile(const QString& path);
+
 signals:
     void macroNameChanged();
 

@@ -1,4 +1,5 @@
 #include "MacroListModel.hpp"
+#include "MacroSerializer.hpp"
 #include <QVariantMap>
 
 MacroListModel::MacroListModel(QObject* parent)
@@ -133,4 +134,21 @@ QString MacroListModel::labelFor(const MacroAction& action) {
             return a.infinite ? QString("Loop ∞") : QString("Loop × %1").arg(a.count);
         return "Unknown";
     }, action);
+}
+
+bool MacroListModel::saveToFile(const QString& path) {
+    return MacroSerializer::saveToFile(m_macro, path);
+}
+
+bool MacroListModel::loadFromFile(const QString& path) {
+    auto loaded = MacroSerializer::loadFromFile(path);
+    if (!loaded)
+        return false;
+
+    beginResetModel();
+    m_macro = *loaded;
+    endResetModel();
+
+    emit macroNameChanged();
+    return true;
 }
