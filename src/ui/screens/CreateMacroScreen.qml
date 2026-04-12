@@ -9,16 +9,17 @@ Rectangle {
     ListView {
         anchors.top: toolBar.bottom
         anchors.bottom: parent.bottom
-        width: parent.width // TODO: Change dimensions as inpector panel enters
+        width: parent.width
 
         model: MacroListModel {}
 
-        delegate: Rectangle {
-            width: parent.width
-            height: 50
+        delegate: MacroItem {
+            width: ListView.view.width
+            title: actionLabel
+            type: actionType
 
-            Text {
-                text: actionLabel
+            onClicked: {
+                console.log("Clicked item:", index)
             }
         }
     }
