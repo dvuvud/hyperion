@@ -70,6 +70,10 @@ qt_add_qml_module(hyperion-app
         src/ui/icons/back.svg
         src/ui/icons/save.svg
         src/ui/icons/run.svg
+        src/ui/icons/keyboard.svg
+        src/ui/icons/mouse.svg
+        src/ui/icons/delay.svg
+        src/ui/icons/loop.svg
         src/ui/icons/macro-create.svg
         src/ui/icons/macro-browse.svg
 )

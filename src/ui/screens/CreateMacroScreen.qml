@@ -11,7 +11,9 @@ Rectangle {
         anchors.bottom: parent.bottom
         width: parent.width
 
-        model: MacroListModel {}
+        model: MacroListModel {
+            id: macroModel
+        }
 
         delegate: MacroItem {
             width: ListView.view.width
@@ -26,5 +28,17 @@ Rectangle {
 
     MacroToolbar {
         id: toolBar
+
+        onAddAction: (type) => {
+            macroModel.appendAction(type)
+        }
+
+        onSaveRequested: {
+            console.log("save macro")
+        }
+
+        onRunRequested: {
+            console.log("run macro")
+        }
     }
 }
