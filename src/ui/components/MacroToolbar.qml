@@ -13,6 +13,7 @@ Rectangle {
     signal addAction(string type)
     signal saveRequested()
     signal runRequested()
+    signal textEdited(string text)
 
     RowLayout {
         anchors.left:    parent.left
@@ -119,6 +120,7 @@ Rectangle {
         horizontalAlignment: Text.AlignHCenter
         selectionColor: "#1a2d4a"
         selectedTextColor: "#b8d4f0"
+        onTextEdited: macroBar.textEdited(text)
     }
 
     // bottom border
