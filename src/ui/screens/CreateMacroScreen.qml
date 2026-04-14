@@ -6,23 +6,46 @@ Rectangle {
     id: root
     color: "#0a1628"
 
-    ListView {
-        anchors.top: toolBar.bottom
-        anchors.bottom: parent.bottom
+    property int selectedIndex: -1
+    property var selectedData: ({})
+    property string selectedType: ""
+
+    // list + inspector panel
+    Item {
+        anchors { top: toolBar.bottom; bottom: parent.bottom; }
         width: parent.width
 
-        model: MacroListModel {
-            id: macroModel
+        ListView {
+            anchors { top: parent.top; bottom: parent.bottom; left: parent.left; right: inspectorPanel.left }
+
+            model: MacroListModel {
+                id: macroModel
+            }
+
+            delegate: MacroItem {
+                width: ListView.view.width
+                title: actionLabel
+                type: actionType
+
+                onClicked: {
+                    if (root.selectedIndex === index)
+                        root.selectedIndex = -1
+                    else
+                        root.selectedIndex = index
+
+                    root.selectedData = actionData
+                    root.selectedType = actionType
+                    console.log("Clicked item:", index)
+                }
+            }
         }
 
-        delegate: MacroItem {
-            width: ListView.view.width
-            title: actionLabel
-            type: actionType
-
-            onClicked: {
-                console.log("Clicked item:", index)
-            }
+        Rectangle {
+            id: inspectorPanel
+            width: 280
+            anchors { top: parent.top; bottom: parent.bottom; right: parent.right }
+            anchors.rightMargin: selectedIndex >= 0 ? 0 : -width
+            Behavior on anchors.rightMargin { NumberAnimation { duration: 220; easing.type: Easing.OutCubic } }
         }
     }
 
