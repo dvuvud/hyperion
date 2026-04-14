@@ -78,8 +78,12 @@ Rectangle {
 
                     Text { text: "Key"; color: "#ffffff" }
                     TextField {
-                        text: root.selectedData.key
-                        onTextChanged: macroModel.updateAction(root.selectedIndex, { key: parseInt(text) })
+                        maximumLength: 1
+                        text: root.selectedData.key ? String.fromCharCode(root.selectedData.key) : ""
+                        onTextChanged: {
+                            if (text.length > 0)
+                                macroModel.updateAction(root.selectedIndex, { key: text.charCodeAt(0) })
+                        }
                     }
 
                     Text { text: "Press"; color: "#ffffff" }
