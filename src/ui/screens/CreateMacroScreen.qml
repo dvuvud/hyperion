@@ -46,6 +46,11 @@ Rectangle {
             anchors { top: parent.top; bottom: parent.bottom; right: parent.right }
             anchors.rightMargin: selectedIndex >= 0 ? 0 : -width
             Behavior on anchors.rightMargin { NumberAnimation { duration: 220; easing.type: Easing.OutCubic } }
+
+            color: "#07101e"
+            border.color: "#1f2a3a"
+            border.width: 1
+            radius: 10
         }
     }
 
