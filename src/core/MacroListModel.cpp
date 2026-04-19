@@ -138,6 +138,7 @@ QString MacroListModel::labelFor(const MacroAction& action) {
             return a.infinite ? QString("Loop ∞") : QString("Loop × %1").arg(a.count);
         if constexpr (std::is_same_v<T, LoopEnd>) {
             return QString("End loop");
+        }
         return "Unknown";
     }, action);
 }
