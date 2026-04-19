@@ -188,6 +188,7 @@ Rectangle {
         }
 
         onRunRequested: {
+            MacroEngineHost.executeFromModel(macroModel);
             console.log("run macro")
         }
 

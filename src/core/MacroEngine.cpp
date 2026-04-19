@@ -1,6 +1,7 @@
 #include "MacroEngine.hpp"
 #include "MacroAction.hpp"
 #include <QThread>
+#include <iostream>
 #include <stdexcept>
 
 MacroEngine::MacroEngine(QObject* parent)
@@ -42,17 +43,21 @@ void MacroEngine::runAction(const MacroAction& action) {
 
         if constexpr (std::is_same_v<T, KeyAction>) {
             // TODO: platform key injection (e.g. CGEvent on macOS)
+            std::cout << "Key action" << std::endl;
             QThread::msleep(a.holdMs > 0 ? a.holdMs : 1);
         }
         else if constexpr (std::is_same_v<T, MouseAction>) {
             // TODO: platform mouse injection
+            std::cout << "Mouse action" << std::endl;
             QThread::msleep(a.holdMs > 0 ? a.holdMs : 1);
         }
         else if constexpr (std::is_same_v<T, DelayAction>) {
             QThread::msleep(a.fixedMs);
+            std::cout << "Delay action" << std::endl;
             // TODO: add jitter. rand in [0, jitterMs]
         }
         else if constexpr (std::is_same_v<T, LoopBegin>) {
+            std::cout << "Loop action" << std::endl;
             // loop control is handled at a higher level. no-op here for now
         }
     }, action);

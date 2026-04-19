@@ -32,8 +32,8 @@ struct LoopBegin {
 };
 
 using MacroAction = std::variant<
-KeyAction,
+    KeyAction,
     MouseAction,
     DelayAction,
     LoopBegin
-    >;
+>;
