@@ -1,11 +1,11 @@
 #include "MacroEngine.hpp"
 #include "MacroAction.hpp"
+#include <InputInjector.hpp>
 #include <QThread>
 #include <iostream>
 
 #include <cstdlib>
 #include <ctime>
-#include <stdexcept>
 
 MacroEngine::MacroEngine(QObject* parent)
     : QObject(parent)
@@ -99,23 +99,33 @@ bool MacroEngine::runAction(const MacroAction& action) {
         using T = std::decay_t<decltype(a)>;
 
         if constexpr (std::is_same_v<T, KeyAction>) {
-            // TODO: platform key injection (e.g. CGEvent on macOS)
-            std::cout << "Key action" << std::endl;
+            InputInjector::sendKey(a.key, true,  a.modifiers);
             if (a.holdMs > 0) {
                 if (!interruptibleSleep(a.holdMs)) return false;
             }
+            InputInjector::sendKey(a.key, false, a.modifiers);
             return true;
         }
         else if constexpr (std::is_same_v<T, MouseAction>) {
-            // TODO: platform mouse injection
-            std::cout << "Mouse action" << std::endl;
-            if (a.holdMs > 0) {
-                if (!interruptibleSleep(a.holdMs)) return false;
+            using Kind = MouseAction::Kind;
+ 
+            if (a.kind == Kind::Click) {
+                MouseAction pressAction   = a; pressAction.kind  = Kind::Press;
+                MouseAction releaseAction = a; releaseAction.kind = Kind::Release;
+                InputInjector::sendMouse(pressAction);
+                if (a.holdMs > 0) {
+                    if (!interruptibleSleep(a.holdMs)) {
+                        InputInjector::sendMouse(releaseAction);
+                        return false;
+                    }
+                }
+                InputInjector::sendMouse(releaseAction);
+            } else {
+                InputInjector::sendMouse(a);
             }
             return true;
         }
         else if constexpr (std::is_same_v<T, DelayAction>) {
-            std::cout << "Delay action" << std::endl;
             uint32_t jitter = 0;
             if (a.jitterMs > 0) {
                 // Uniform random in [0, jitterMs]
@@ -124,12 +134,10 @@ bool MacroEngine::runAction(const MacroAction& action) {
             return interruptibleSleep(a.fixedMs + jitter);
         }
         else if constexpr (std::is_same_v<T, LoopBegin>) {
-            std::cout << "Loop begin" << std::endl;
-            return true;
             // loop control is handled at a higher level. no-op here for now
+            return true;
         }
         else if constexpr (std::is_same_v<T, LoopEnd>) {
-            std::cout << "Loop end" << std::endl;
             return true;
         }
     }, action);
