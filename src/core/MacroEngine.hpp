@@ -25,7 +25,20 @@ signals:
     void executionFailed(const QString& macroId, const QString& reason);
 
 private:
-    void runAction(const MacroAction& action);
+    // Run a single action and return false if aborted
+    bool runAction(const MacroAction& action);
+
+    // Sleep for `ms` milliseconds, checking m_abort every `granularityMs`.
+    // Returns false if aborted before the full duration elapsed.
+    bool interruptibleSleep(uint32_t ms, uint32_t granularityMs = 20);
+
+    // Loop frame pushed onto m_loopStack when we enter a LoopBegin.
+    struct LoopFrame {
+        int      startIndex;    // index of the LoopBegin action
+        uint32_t remaining;     // iterations left (0 = infinite)
+        bool     infinite;
+    };
 
     std::atomic<bool> m_abort { false };
+    std::vector<LoopFrame> m_loopStack;
 };
