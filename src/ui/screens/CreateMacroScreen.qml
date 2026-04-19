@@ -76,35 +76,74 @@ Rectangle {
                     spacing: 8
                     padding: 12
 
-                    Text { text: "Key"; color: "#ffffff" }
+                    property int currentModifiers: root.selectedData.modifiers ?? 0
+
+                    Text { text: "Key"; color: "#ffffff"; font.pixelSize: 12 }
                     TextField {
+                        width: parent.width - 24
                         maximumLength: 1
                         text: root.selectedData.key ? String.fromCharCode(root.selectedData.key) : ""
-                        onTextChanged: {
+                        onEditingFinished: {
                             if (text.length > 0)
-                                macroModel.updateAction(root.selectedIndex, { key: text.charCodeAt(0) })
+                            macroModel.updateAction(root.selectedIndex, { key: text.charCodeAt(0) })
                         }
                     }
 
-                    Text { text: "Press"; color: "#ffffff" }
-                    Switch {
-                        checked: root.selectedData.press
-                        onCheckedChanged: macroModel.updateAction(root.selectedIndex, { press: checked })
-                    }
+                    Text { text: "Direction"; color: "#ffffff"; font.pixelSize: 12 }
+                    ComboBox {
+                        width: parent.width - 24
+                        model: ["Press (↓)", "Release (↑)"]
+                        currentIndex: root.selectedData.press ? 0 : 1
+                        onActivated: (idx) => macroModel.updateAction(
+                            root.selectedIndex, { press: idx === 0 })
+                        }
 
-                    Text { text: "Modifiers"; color: "#ffffff" }
-                    TextField {
-                        text: root.selectedData.modifiers
-                        onTextChanged: macroModel.updateAction(root.selectedIndex, { modifiers: parseInt(text) })
-                    }
+                        Text { text: "Modifiers"; color: "#ffffff"; font.pixelSize: 12 }
 
-                    Text { text: "Hold (ms)"; color: "#ffffff" }
-                    TextField {
-                        text: root.selectedData.holdMs
-                        onTextChanged: macroModel.updateAction(root.selectedIndex, { holdMs: parseInt(text) })
-                    }
-                }
-            }
+                        // one row per modifier — checkbox + label
+                        Repeater {
+                            model: [
+                                { label: "Shift",        bit: 1 },
+                                { label: "Control",      bit: 2 },
+                                { label: "Alt / Option", bit: 4 },
+                                { label: "Meta / Cmd",   bit: 8 },
+                            ]
+
+                            delegate: Row {
+                                spacing: 8
+                                width: parent.width - 24
+
+                                CheckBox {
+                                    checked: (parent.parent.currentModifiers & modelData.bit) !== 0
+                                    onToggled: {
+                                        var col = parent.parent   // the Column
+                                        col.currentModifiers = checked
+                                        ? col.currentModifiers | modelData.bit
+                                        : col.currentModifiers & ~modelData.bit
+                                        macroModel.updateAction(
+                                            root.selectedIndex,
+                                            { modifiers: col.currentModifiers })
+                                        }
+                                    }
+                                    Text {
+                                        text: modelData.label
+                                        color: "#c0d4ee"
+                                        font.pixelSize: 12
+                                        anchors.verticalCenter: parent.verticalCenter
+                                    }
+                                }
+                            }
+
+                            Text { text: "Hold (ms)"; color: "#ffffff"; font.pixelSize: 12 }
+                            TextField {
+                                width: parent.width - 24
+                                text: root.selectedData.holdMs ?? 0
+                                inputMethodHints: Qt.ImhDigitsOnly
+                                onEditingFinished: macroModel.updateAction(
+                                    root.selectedIndex, { holdMs: parseInt(text) })
+                                }
+                            }
+                        }
 
             Component {
                 id: mouseEditorComponent
@@ -112,22 +151,82 @@ Rectangle {
                     spacing: 8
                     padding: 12
 
-                    Text { text: "X"; color: "#ffffff" }
-                    TextField {
-                        text: root.selectedData.x
-                        onTextChanged: macroModel.updateAction(root.selectedIndex, { x: parseInt(text) })
+                    property int currentKind:   root.selectedData.kind   ?? 0
+                    property int currentButton: root.selectedData.button ?? 0
+
+                    Text { text: "Kind"; color: "#ffffff"; font.pixelSize: 12 }
+                    ComboBox {
+                        width: parent.width - 24
+                        model: ["Click", "Press", "Release", "Move", "Scroll"]
+                        currentIndex: parent.currentKind
+                        onActivated: (idx) => {
+                            parent.currentKind = idx
+                            macroModel.updateAction(root.selectedIndex, { kind: idx })
+                        }
                     }
 
-                    Text { text: "Y"; color: "#ffffff" }
-                    TextField {
-                        text: root.selectedData.y
-                        onTextChanged: macroModel.updateAction(root.selectedIndex, { y: parseInt(text) })
+                    Text {
+                        text: "Button"; color: "#ffffff"; font.pixelSize: 12
+                        visible: parent.currentKind < 3
+                    }
+                    ComboBox {
+                        width: parent.width - 24
+                        visible: parent.currentKind < 3
+                        model: ["Left", "Right", "Middle"]
+                        currentIndex: parent.currentButton
+                        onActivated: (idx) => {
+                            parent.currentButton = idx
+                            macroModel.updateAction(root.selectedIndex, { button: idx })
+                        }
                     }
 
-                    Text { text: "Hold (ms)"; color: "#ffffff" }
+                    Text {
+                        text: "X"; color: "#ffffff"; font.pixelSize: 12
+                        visible: parent.currentKind !== 4
+                    }
                     TextField {
-                        text: root.selectedData.holdMs
-                        onTextChanged: macroModel.updateAction(root.selectedIndex, { holdMs: parseInt(text) })
+                        width: parent.width - 24
+                        visible: parent.currentKind !== 4
+                        text: root.selectedData.x ?? 0
+                        inputMethodHints: Qt.ImhDigitsOnly
+                        onEditingFinished: macroModel.updateAction(root.selectedIndex, { x: parseInt(text) })
+                    }
+
+                    Text {
+                        text: "Y"; color: "#ffffff"; font.pixelSize: 12
+                        visible: parent.currentKind !== 4
+                    }
+                    TextField {
+                        width: parent.width - 24
+                        visible: parent.currentKind !== 4
+                        text: root.selectedData.y ?? 0
+                        inputMethodHints: Qt.ImhDigitsOnly
+                        onEditingFinished: macroModel.updateAction(root.selectedIndex, { y: parseInt(text) })
+                    }
+
+                    Text {
+                        text: "Scroll delta"; color: "#ffffff"; font.pixelSize: 12
+                        visible: parent.currentKind === 4
+                    }
+                    TextField {
+                        width: parent.width - 24
+                        visible: parent.currentKind === 4
+                        text: root.selectedData.scrollDelta ?? 0
+                        inputMethodHints: Qt.ImhDigitsOnly
+                        placeholderText: "+ up  / − down"
+                        onEditingFinished: macroModel.updateAction(root.selectedIndex, { scrollDelta: parseInt(text) })
+                    }
+
+                    Text {
+                        text: "Hold (ms)"; color: "#ffffff"; font.pixelSize: 12
+                        visible: parent.currentKind < 3
+                    }
+                    TextField {
+                        width: parent.width - 24
+                        visible: parent.currentKind < 3
+                        text: root.selectedData.holdMs ?? 0
+                        inputMethodHints: Qt.ImhDigitsOnly
+                        onEditingFinished: macroModel.updateAction(root.selectedIndex, { holdMs: parseInt(text) })
                     }
                 }
             }
