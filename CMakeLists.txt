@@ -71,6 +71,8 @@ qt_add_qml_module(hyperion-app
         src/core/MacroEngine.cpp
         src/core/MacroSerializer.hpp
         src/core/MacroSerializer.cpp
+        src/core/InputInjector.hpp
+        src/core/InputInjector.cpp
 
     RESOURCES
         src/ui/icons/back.svg
@@ -92,3 +94,18 @@ target_link_libraries(hyperion-app PRIVATE
     Qt6::Qml
     Qt6::Quick
 )
+
+if(APPLE)
+    target_link_libraries(hyperion-app PRIVATE
+        "-framework ApplicationServices"
+    )
+elseif(WIN32)
+    target_link_libraries(hyperion-app PRIVATE user32)
+elseif(UNIX)
+    find_package(X11 REQUIRED)
+    if(NOT X11_Xtst_FOUND)
+        message(FATAL_ERROR "libXtst not found. Install libxtst-dev (apt) or libXtst-devel (dnf)")
+    endif()
+    target_link_libraries(hyperion-app PRIVATE X11::X11 X11::Xtst)
+endif()
+
