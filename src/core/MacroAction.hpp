@@ -1,13 +1,12 @@
 #pragma once
 
 #include <variant>
-#include <string>
 #include <cstdint>
 
 struct KeyAction {
     uint32_t key;
     bool press;
-    uint32_t modifiers;
+    uint32_t modifiers; // Bitmask for key modifiers
     uint32_t holdMs;
 };
 
@@ -15,9 +14,10 @@ struct MouseAction {
     enum class Button { Left, Right, Middle };
     enum class Kind   { Click, Press, Release, Move, Scroll };
 
-    Button button;
-    Kind   kind;
-    int    x, y;
+    Button   button;
+    Kind     kind;
+    int      x, y;
+    int      scrollDelta;
     uint32_t holdMs;
 };
 

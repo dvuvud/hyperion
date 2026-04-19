@@ -36,9 +36,12 @@ QVariant MacroListModel::data(const QModelIndex& index, int role) const {
                     m["modifiers"] = a.modifiers;
                     m["holdMs"]    = a.holdMs;
                 } else if constexpr (std::is_same_v<T, MouseAction>) {
-                    m["x"]      = a.x;
-                    m["y"]      = a.y;
-                    m["holdMs"] = a.holdMs;
+                    m["button"]      = static_cast<int>(a.button);
+                    m["kind"]        = static_cast<int>(a.kind);
+                    m["x"]           = a.x;
+                    m["y"]           = a.y;
+                    m["scrollDelta"] = a.scrollDelta;
+                    m["holdMs"]      = a.holdMs;
                 } else if constexpr (std::is_same_v<T, DelayAction>) {
                     m["fixedMs"]  = a.fixedMs;
                     m["jitterMs"] = a.jitterMs;
@@ -97,9 +100,12 @@ void MacroListModel::updateAction(int index, const QVariantMap& data) {
         if (data.contains("holdMs"))    a.holdMs    = data["holdMs"].toUInt();
     } else if (type == "mouse") {
         auto& a = std::get<MouseAction>(action);
-        if (data.contains("x"))      a.x      = data["x"].toInt();
-        if (data.contains("y"))      a.y      = data["y"].toInt();
-        if (data.contains("holdMs")) a.holdMs = data["holdMs"].toUInt();
+        if (data.contains("button"))      a.button      = static_cast<MouseAction::Button>(data["button"].toInt());
+        if (data.contains("kind"))        a.kind        = static_cast<MouseAction::Kind>(data["kind"].toInt());
+        if (data.contains("x"))           a.x           = data["x"].toInt();
+        if (data.contains("y"))           a.y           = data["y"].toInt();
+        if (data.contains("scrollDelta")) a.scrollDelta = data["scrollDelta"].toInt();
+        if (data.contains("holdMs"))      a.holdMs      = data["holdMs"].toUInt();
     } else if (type == "delay") {
         auto& a = std::get<DelayAction>(action);
         if (data.contains("fixedMs"))  a.fixedMs  = data["fixedMs"].toUInt();
@@ -120,7 +126,7 @@ QString MacroListModel::typeFor(const MacroAction& action) {
         if constexpr (std::is_same_v<T, MouseAction>)  return "mouse";
         if constexpr (std::is_same_v<T, DelayAction>)  return "delay";
         if constexpr (std::is_same_v<T, LoopBegin>)    return "loopBegin";
-        if constexpr (std::is_same_v<T, LoopEnd>)    return "loopEnd";
+        if constexpr (std::is_same_v<T, LoopEnd>)      return "loopEnd";
         return "unknown";
     }, action);
 }
@@ -129,9 +135,19 @@ QString MacroListModel::labelFor(const MacroAction& action) {
     return std::visit([](auto&& a) -> QString {
         using T = std::decay_t<decltype(a)>;
         if constexpr (std::is_same_v<T, KeyAction>)
-            return QString("Key %1").arg(a.key);
-        if constexpr (std::is_same_v<T, MouseAction>)
-            return QString("Mouse click (%1, %2)").arg(a.x).arg(a.y);
+            return QString("Key 0x%1%2")
+                .arg(a.key, 0, 16)
+                .arg(a.press ? " ↓" : " ↑");
+        if constexpr (std::is_same_v<T, MouseAction>) {
+            using Kind = MouseAction::Kind;
+            switch (a.kind) {
+                case Kind::Move:    return QString("Move → (%1, %2)").arg(a.x).arg(a.y);
+                case Kind::Scroll:  return QString("Scroll %1").arg(a.scrollDelta > 0 ? "↑" : "↓");
+                case Kind::Click:   return QString("Click (%1, %2)").arg(a.x).arg(a.y);
+                case Kind::Press:   return QString("Mouse ↓ (%1, %2)").arg(a.x).arg(a.y);
+                case Kind::Release: return QString("Mouse ↑ (%1, %2)").arg(a.x).arg(a.y);
+            }
+        }
         if constexpr (std::is_same_v<T, DelayAction>)
             return QString("Wait %1ms").arg(a.fixedMs);
         if constexpr (std::is_same_v<T, LoopBegin>)
