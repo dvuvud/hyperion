@@ -82,7 +82,7 @@ Rectangle {
             onClicked: macroBar.addAction("delay")
         }
 
-        // loop action button
+        // loop begin button
         ToolButton {
             icon.source: "../icons/loop.svg"
 
@@ -92,6 +92,18 @@ Rectangle {
             }
 
             onClicked: macroBar.addAction("loopBegin")
+        }
+
+        // loop begin button
+        ToolButton {
+            icon.source: "../icons/loop.svg"
+
+            background: Rectangle {
+                color: parent.hovered ? "#1a2d4a" : "transparent"
+                radius: 4
+            }
+
+            onClicked: macroBar.addAction("loopEnd")
         }
 
         // run button
