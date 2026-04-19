@@ -45,6 +45,8 @@ QVariant MacroListModel::data(const QModelIndex& index, int role) const {
                 } else if constexpr (std::is_same_v<T, LoopBegin>) {
                     m["count"]    = a.count;
                     m["infinite"] = a.infinite;
+                } else if constexpr (std::is_same_v<T, LoopEnd>) {
+                    // No fields
                 }
                 return m;
             }, action);
@@ -60,6 +62,7 @@ void MacroListModel::appendAction(const QString& type) {
     else if (type == "mouse")     m_macro.actions.push_back(MouseAction{});
     else if (type == "delay")     m_macro.actions.push_back(DelayAction{ 500, 0 });
     else if (type == "loopBegin") m_macro.actions.push_back(LoopBegin{ 3, false });
+    else if (type == "loopEnd") m_macro.actions.push_back(LoopEnd{ });
 
     endInsertRows();
 }
@@ -117,6 +120,7 @@ QString MacroListModel::typeFor(const MacroAction& action) {
         if constexpr (std::is_same_v<T, MouseAction>)  return "mouse";
         if constexpr (std::is_same_v<T, DelayAction>)  return "delay";
         if constexpr (std::is_same_v<T, LoopBegin>)    return "loopBegin";
+        if constexpr (std::is_same_v<T, LoopEnd>)    return "loopEnd";
         return "unknown";
     }, action);
 }
@@ -132,6 +136,8 @@ QString MacroListModel::labelFor(const MacroAction& action) {
             return QString("Wait %1ms").arg(a.fixedMs);
         if constexpr (std::is_same_v<T, LoopBegin>)
             return a.infinite ? QString("Loop ∞") : QString("Loop × %1").arg(a.count);
+        if constexpr (std::is_same_v<T, LoopEnd>) {
+            return QString("End loop");
         return "Unknown";
     }, action);
 }

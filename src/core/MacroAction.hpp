@@ -31,9 +31,12 @@ struct LoopBegin {
     bool     infinite;
 };
 
+struct LoopEnd {};
+
 using MacroAction = std::variant<
     KeyAction,
     MouseAction,
     DelayAction,
-    LoopBegin
+    LoopBegin,
+    LoopEnd
 >;
